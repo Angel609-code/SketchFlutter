@@ -1,333 +1,75 @@
+import 'dart:math';
+
+import 'package:flutter_processing/core/constants/noise_constants.dart';
+
 class PerlinNoise {
-  PerlinNoise() {
-    for (int i = 0; i < 256; i++) {
-      _p[256 + i] = _p[i] = _permutation[i];
+  List<double> perlin = List<double>.filled(perlinSize + 1, 0);
+
+  double noise([double x = 0, double y = 0, double z = 0]) {
+    if (perlin[0] == 0) {
+      for (int i = 0; i < perlinSize + 1; i++) {
+        perlin[i] = Random().nextDouble();
+      }
     }
-  }
-
-  final List<int> _p = List<int>.filled(512, 0);
-  final List<int> _permutation = <int>[
-    151,
-    160,
-    137,
-    91,
-    90,
-    15,
-    131,
-    13,
-    201,
-    95,
-    96,
-    53,
-    194,
-    233,
-    7,
-    225,
-    140,
-    36,
-    103,
-    30,
-    69,
-    142,
-    8,
-    99,
-    37,
-    240,
-    21,
-    10,
-    23,
-    190,
-    6,
-    148,
-    247,
-    120,
-    234,
-    75,
-    0,
-    26,
-    197,
-    62,
-    94,
-    252,
-    219,
-    203,
-    117,
-    35,
-    11,
-    32,
-    57,
-    177,
-    33,
-    88,
-    237,
-    149,
-    56,
-    87,
-    174,
-    20,
-    125,
-    136,
-    171,
-    168,
-    68,
-    175,
-    74,
-    165,
-    71,
-    134,
-    139,
-    48,
-    27,
-    166,
-    77,
-    146,
-    158,
-    231,
-    83,
-    111,
-    229,
-    122,
-    60,
-    211,
-    133,
-    230,
-    220,
-    105,
-    92,
-    41,
-    55,
-    46,
-    245,
-    40,
-    244,
-    102,
-    143,
-    54,
-    65,
-    25,
-    63,
-    161,
-    1,
-    216,
-    80,
-    73,
-    209,
-    76,
-    132,
-    187,
-    208,
-    89,
-    18,
-    169,
-    200,
-    196,
-    135,
-    130,
-    116,
-    188,
-    159,
-    86,
-    164,
-    100,
-    109,
-    198,
-    173,
-    186,
-    3,
-    64,
-    52,
-    217,
-    226,
-    250,
-    124,
-    123,
-    5,
-    202,
-    38,
-    147,
-    118,
-    126,
-    255,
-    82,
-    85,
-    212,
-    207,
-    206,
-    59,
-    227,
-    47,
-    16,
-    58,
-    17,
-    182,
-    189,
-    28,
-    42,
-    223,
-    183,
-    170,
-    213,
-    119,
-    248,
-    152,
-    2,
-    44,
-    154,
-    163,
-    70,
-    221,
-    153,
-    101,
-    155,
-    167,
-    43,
-    172,
-    9,
-    129,
-    22,
-    39,
-    253,
-    19,
-    98,
-    108,
-    110,
-    79,
-    113,
-    224,
-    232,
-    178,
-    185,
-    112,
-    104,
-    218,
-    246,
-    97,
-    228,
-    251,
-    34,
-    242,
-    193,
-    238,
-    210,
-    144,
-    12,
-    191,
-    179,
-    162,
-    241,
-    81,
-    51,
-    145,
-    235,
-    249,
-    14,
-    239,
-    107,
-    49,
-    192,
-    214,
-    31,
-    181,
-    199,
-    106,
-    157,
-    184,
-    84,
-    204,
-    176,
-    115,
-    121,
-    50,
-    45,
-    127,
-    4,
-    150,
-    254,
-    138,
-    236,
-    205,
-    93,
-    222,
-    114,
-    67,
-    29,
-    24,
-    72,
-    243,
-    141,
-    128,
-    195,
-    78,
-    66,
-    215,
-    61,
-    156,
-    180,
-  ];
-
-  double noise(double x, [double y = 0, double z = 0]) {
-    final int X = x.floor() & 255;
-    final int Y = y.floor() & 255;
-    final int Z = z.floor() & 255;
-    final double modifiedX = x - x.floor();
-    final double modifiedY = y - y.floor();
-    final double modifiedZ = z - z.floor();
-    final double u = _fade(modifiedX);
-    final double v = _fade(modifiedY);
-    final double w = _fade(modifiedZ);
-    final int A = _p[X] + Y;
-    final int aA = _p[A] + Z;
-    final int aB = _p[A + 1] + Z;
-    final int B = _p[X + 1] + Y;
-    final int bA = _p[B] + Z;
-    final int bB = _p[B + 1] + Z;
-
-    return _lerp(
-      w,
-      _lerp(
-        v,
-        _lerp(
-          u,
-          _grad(_p[aA], modifiedX, modifiedY, modifiedZ),
-          _grad(_p[bA], modifiedX - 1, modifiedY, modifiedZ),
-        ),
-        _lerp(
-          u,
-          _grad(_p[aB], modifiedX, modifiedY - 1, modifiedZ),
-          _grad(_p[bB], modifiedX - 1, modifiedY - 1, modifiedZ),
-        ),
-      ),
-      _lerp(
-        v,
-        _lerp(
-          u,
-          _grad(_p[aA + 1], modifiedX, modifiedY, modifiedZ - 1),
-          _grad(_p[bA + 1], modifiedX - 1, modifiedY, modifiedZ - 1),
-        ),
-        _lerp(
-          u,
-          _grad(_p[aB + 1], modifiedX, modifiedY - 1, modifiedZ - 1),
-          _grad(_p[bB + 1], modifiedX - 1, modifiedY - 1, modifiedZ - 1),
-        ),
-      ),
-    );
-  }
-
-  double _fade(double t) => t * t * t * (t * (t * 6 - 15) + 10);
-
-  double _lerp(double t, double a, double b) => a + t * (b - a);
-
-  double _grad(int hash, double x, double y, double z) {
-    final int h = hash & 15;
-    final double u = h < 8 ? x : y;
-    double v;
-    if (h < 4) {
-      v = y;
-    } else if (h == 12 || h == 14) {
-      v = x;
-    } else {
-      v = z;
+    double modifiedX = x;
+    double modifiedY = y;
+    double modifiedZ = z;
+    if (x < 0) {
+      modifiedX = -x;
     }
-    return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+    if (y < 0) {
+      modifiedY = -y;
+    }
+    if (z < 0) {
+      modifiedZ = -z;
+    }
+    int xi = modifiedX.floor();
+    int yi = modifiedY.floor();
+    int zi = modifiedZ.floor();
+    double xf = modifiedX - xi;
+    double yf = modifiedY - yi;
+    double zf = modifiedZ - zi;
+    double r = 0;
+    double ampl = 0.5;
+    for (int o = 0; o < perlinOctaves; o++) {
+      int of = xi + (yi << perlinYwrapb) + (zi << perlinZwrapb);
+      final double rxf = scaledCosine(xf);
+      final double ryf = scaledCosine(yf);
+      double n1 = perlin[of & perlinSize];
+      n1 += rxf * (perlin[(of + 1) & perlinSize] - n1);
+      double n2 = perlin[(of + perlinYwrap) & perlinSize];
+      n2 += rxf * (perlin[(of + perlinYwrap + 1) & perlinSize] - n2);
+      n1 += ryf * (n2 - n1);
+      of += perlinZwrap;
+      n2 = perlin[of & perlinSize];
+      n2 += rxf * (perlin[(of + 1) & perlinSize] - n2);
+      double n3 = perlin[(of + perlinYwrap) & perlinSize];
+      n3 += rxf * (perlin[(of + perlinYwrap + 1) & perlinSize] - n3);
+      n2 += ryf * (n3 - n2);
+      n1 += scaledCosine(zf) * (n2 - n1);
+      r += n1 * ampl;
+      ampl *= perlinAmpFalloff;
+      xi <<= 1;
+      xf *= 2;
+      yi <<= 1;
+      yf *= 2;
+      zi <<= 1;
+      zf *= 2;
+      if (xf >= 1) {
+        xi++;
+        xf--;
+      }
+      if (yf >= 1) {
+        yi++;
+        yf--;
+      }
+      if (zf >= 1) {
+        zi++;
+        zf--;
+      }
+    }
+    return r;
   }
+
+  double scaledCosine(double i) => 0.5 * (1.0 - cos(i * pi));
 }
