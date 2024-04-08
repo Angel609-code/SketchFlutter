@@ -11,44 +11,45 @@ class PerlinNoise {
         perlin[i] = Random().nextDouble();
       }
     }
-    double modifiedX = x;
-    double modifiedY = y;
-    double modifiedZ = z;
-    if (x < 0) {
-      modifiedX = -x;
-    }
-    if (y < 0) {
-      modifiedY = -y;
-    }
-    if (z < 0) {
-      modifiedZ = -z;
-    }
+
+    final double modifiedX = x.abs();
+    final double modifiedY = y.abs();
+    final double modifiedZ = z.abs();
+
     int xi = modifiedX.floor();
     int yi = modifiedY.floor();
     int zi = modifiedZ.floor();
+
     double xf = modifiedX - xi;
     double yf = modifiedY - yi;
     double zf = modifiedZ - zi;
-    double r = 0;
-    double ampl = 0.5;
-    for (int o = 0; o < perlinOctaves; o++) {
-      int of = xi + (yi << perlinYwrapb) + (zi << perlinZwrapb);
+
+    double result = 0;
+    double amplitude = 0.5;
+
+    for (int octave = 0; octave < perlinOctaves; octave++) {
+      int offset = xi + (yi << perlinYwrapb) + (zi << perlinZwrapb);
       final double rxf = scaledCosine(xf);
       final double ryf = scaledCosine(yf);
-      double n1 = perlin[of & perlinSize];
-      n1 += rxf * (perlin[(of + 1) & perlinSize] - n1);
-      double n2 = perlin[(of + perlinYwrap) & perlinSize];
-      n2 += rxf * (perlin[(of + perlinYwrap + 1) & perlinSize] - n2);
+
+      double n1 = perlin[offset & perlinSize];
+      double n2 = perlin[(offset + perlinYwrap) & perlinSize];
+
+      n1 += rxf * (perlin[(offset + 1) & perlinSize] - n1);
+      n2 += rxf * (perlin[(offset + perlinYwrap + 1) & perlinSize] - n2);
+
       n1 += ryf * (n2 - n1);
-      of += perlinZwrap;
-      n2 = perlin[of & perlinSize];
-      n2 += rxf * (perlin[(of + 1) & perlinSize] - n2);
-      double n3 = perlin[(of + perlinYwrap) & perlinSize];
-      n3 += rxf * (perlin[(of + perlinYwrap + 1) & perlinSize] - n3);
+
+      offset += perlinZwrap;
+      n2 = perlin[offset & perlinSize];
+      n2 += rxf * (perlin[(offset + 1) & perlinSize] - n2);
+
+      double n3 = perlin[(offset + perlinYwrap) & perlinSize];
+      n3 += rxf * (perlin[(offset + perlinYwrap + 1) & perlinSize] - n3);
       n2 += ryf * (n3 - n2);
       n1 += scaledCosine(zf) * (n2 - n1);
-      r += n1 * ampl;
-      ampl *= perlinAmpFalloff;
+      result += n1 * amplitude;
+      amplitude *= perlinAmpFalloff;
       xi <<= 1;
       xf *= 2;
       yi <<= 1;
@@ -68,7 +69,7 @@ class PerlinNoise {
         zf--;
       }
     }
-    return r;
+    return result;
   }
 
   double scaledCosine(double i) => 0.5 * (1.0 - cos(i * pi));

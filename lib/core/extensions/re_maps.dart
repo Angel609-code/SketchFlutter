@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Remaps {
   double map(
     double value,
@@ -10,22 +12,19 @@ class Remaps {
     final double newValue =
         (value - start1) / (stop1 - start1) * (stop2 - start2) + start2;
 
-    if (withinBounds) {
-      if (start2 < stop2) {
-        if (newValue < start2) {
-          return start2;
-        } else if (newValue > stop2) {
-          return stop2;
-        }
-      } else {
-        if (newValue > start2) {
-          return start2;
-        } else if (newValue < stop2) {
-          return stop2;
-        }
-      }
+    if (!withinBounds) {
+      return newValue;
     }
 
-    return newValue;
+    if (start2 < stop2) {
+      return _constrain(newValue, start2, stop2);
+    } else {
+      return _constrain(newValue, stop2, start2);
+    }
   }
+
+  double _constrain(double value, double low, double high) => max(
+        min(value, high),
+        low,
+      );
 }

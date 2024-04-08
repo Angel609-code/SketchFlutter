@@ -15,14 +15,14 @@ class PerlinNoise1 extends SketchDefinition {
   @override
   void draw() {
     background(const Color.fromARGB(255, 28, 29, 31));
+    fillColor(Colors.white);
 
     final double x = map(noise(xoff), 0, 1, 0, width);
-    // final double y = map(noise(yoff), 0, 1, 0, height);
+    final double y = map(noise(yoff), 0, 1, 0, height);
 
-    xoff += 0.000001;
+    xoff += 0.01;
     yoff += 0.01;
-    print(noise(xoff));
 
-    circle(x, height / 2, 24);
+    circle(x, y, 24);
   }
 }
