@@ -1,8 +1,8 @@
 // import 'dart:math' as math;
 import 'package:flutter_processing/examples/imports.dart';
 
-class PerlinNoise1 extends SketchDefinition {
-  PerlinNoise1();
+class PerlinNoiseBasic extends SketchDefinition {
+  PerlinNoiseBasic();
 
   double xoff = 0;
   double yoff = 10000;

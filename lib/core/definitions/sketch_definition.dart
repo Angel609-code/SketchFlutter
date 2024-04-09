@@ -1,6 +1,6 @@
 import 'dart:js' as js;
 import 'package:flutter/material.dart';
-// import 'package:flutter_processing/core/extensions/noise.dart';
+import 'package:flutter_processing/core/extensions/noise.dart';
 import 'package:flutter_processing/core/extensions/re_maps.dart';
 
 abstract class SketchDefinition {
@@ -44,8 +44,6 @@ abstract class SketchDefinition {
   double noise([double x = 0, double y = 0, double t = 0]) {
     // final PerlinNoise perlinNoise = PerlinNoise();
     // return perlinNoise.noise(x, y, t);
-    // execute this js code to get the value of
-    // p5.prototype.noise(0.02)
     return js.context.callMethod('eval', <dynamic>['p5.prototype.noise($x)']);
   }
 

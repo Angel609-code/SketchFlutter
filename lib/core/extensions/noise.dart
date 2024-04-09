@@ -3,12 +3,13 @@ import 'dart:math';
 import 'package:flutter_processing/core/constants/noise_constants.dart';
 
 class PerlinNoise {
-  List<double> perlin = List<double>.filled(perlinSize + 1, 0);
+  List<double> perlin = <double>[];
 
   double noise([double x = 0, double y = 0, double z = 0]) {
-    if (perlin[0] == 0) {
+    if (perlin.isEmpty) {
+      perlin = List<double>.filled(perlinSize + 1, 0);
       for (int i = 0; i < perlinSize + 1; i++) {
-        perlin[i] = Random().nextDouble();
+        perlin[i] = customRandom();
       }
     }
 
@@ -33,16 +34,16 @@ class PerlinNoise {
       final double ryf = scaledCosine(yf);
 
       double n1 = perlin[offset & perlinSize];
-      double n2 = perlin[(offset + perlinYwrap) & perlinSize];
+      double n2 = perlin[offset + perlinYwrap & perlinSize];
 
-      n1 += rxf * (perlin[(offset + 1) & perlinSize] - n1);
-      n2 += rxf * (perlin[(offset + perlinYwrap + 1) & perlinSize] - n2);
+      n1 += rxf * (perlin[offset + 1 & perlinSize] - n1);
+      n2 += rxf * (perlin[offset + perlinYwrap + 1 & perlinSize] - n2);
 
       n1 += ryf * (n2 - n1);
 
       offset += perlinZwrap;
       n2 = perlin[offset & perlinSize];
-      n2 += rxf * (perlin[(offset + 1) & perlinSize] - n2);
+      n2 += rxf * (perlin[offset + 1 & perlinSize] - n2);
 
       double n3 = perlin[(offset + perlinYwrap) & perlinSize];
       n3 += rxf * (perlin[(offset + perlinYwrap + 1) & perlinSize] - n3);
@@ -73,4 +74,6 @@ class PerlinNoise {
   }
 
   double scaledCosine(double i) => 0.5 * (1.0 - cos(i * pi));
+
+  double customRandom() => Random().nextDouble();
 }
