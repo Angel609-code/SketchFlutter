@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter_processing/examples/imports.dart';
 
 class SunflowerSketch extends SketchDefinition {
@@ -25,7 +26,7 @@ class SunflowerSketch extends SketchDefinition {
     const double scaleFactor = 1 / 40;
     final double phi = (math.sqrt(5) + 1) / 2;
 
-    fillColor(Colors.orange);
+    fill(Colors.orange);
     for (int i = 0; i < seeds; i++) {
       final double theta = i * tau / phi;
       final double r = math.sqrt(i) * scaleFactor;
@@ -34,7 +35,7 @@ class SunflowerSketch extends SketchDefinition {
       circle(x, y, circleSize);
     }
 
-    fillColor(Colors.grey.shade700);
+    fill(Colors.grey.shade700);
     for (int j = seeds; j < maxSeeds; j++) {
       final double x = math.cos(tau * j / (maxSeeds - 1)) * size + width / 2;
       final double y = math.sin(tau * j / (maxSeeds - 1)) * size + height / 2;

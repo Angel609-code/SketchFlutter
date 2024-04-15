@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_processing/core/core.dart';
-import 'package:flutter_processing/examples/perlin_noise/perlin_noise_basic.dart';
+import 'package:flutter_processing/examples/perlin_noise/perlin_noise_graph.dart';
+// import 'package:flutter_processing/examples/perlin_noise/perlin_noise_basic.dart';
 // import 'package:flutter_processing/examples/widgets/sunflower.dart';
 
 void main() {
@@ -13,7 +14,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 28, 29, 31),
           appBar: AppBar(
             backgroundColor: Colors.blueGrey[900],
             title: const Text(
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: CanvasBody(
-              sketch: PerlinNoiseBasic(),
+              sketch: PerlinNoiseGraph(),
             ),
             // child: Sunflower(),
           ),

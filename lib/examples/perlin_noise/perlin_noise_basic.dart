@@ -15,7 +15,7 @@ class PerlinNoiseBasic extends SketchDefinition {
   @override
   void draw() {
     background(const Color.fromARGB(255, 28, 29, 31));
-    fillColor(Colors.white);
+    fill(Colors.white);
 
     final double x = map(noise(xoff), 0, 1, 0, width);
     final double y = map(noise(yoff), 0, 1, 0, height);
