@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter_processing/core/constants/noise_constants.dart';
 
+int perlinNoiseSeed = Random().nextInt(1000);
+
 class PerlinNoise {
   List<double> perlin = <double>[];
 
@@ -9,7 +11,7 @@ class PerlinNoise {
     if (perlin.isEmpty) {
       perlin = List<double>.filled(perlinSize + 1, 0);
       for (int i = 0; i < perlinSize + 1; i++) {
-        perlin[i] = customRandom();
+        perlin[i] = customRandom(i * perlinNoiseSeed);
       }
     }
 
@@ -73,7 +75,13 @@ class PerlinNoise {
     return result;
   }
 
-  double scaledCosine(double i) => 0.5 * (1.0 - cos(i * pi));
+  double scaledCosine(double i) => 0.5 * (1 - cos(i * pi));
 
-  double customRandom() => Random().nextDouble();
+  double customRandom(int seed) {
+    const int a = 1664525;
+    const int c = 1013904223;
+    const int m = 0x100000000;
+
+    return (seed * a + c) % m / m;
+  }
 }

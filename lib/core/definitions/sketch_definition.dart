@@ -1,4 +1,3 @@
-import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:flutter_processing/core/extensions/noise.dart';
 import 'package:flutter_processing/core/extensions/re_maps.dart';
@@ -40,11 +39,9 @@ abstract class SketchDefinition {
     }
   }
 
-  // ignore: prefer_expression_function_bodies
   double noise([double x = 0, double y = 0, double t = 0]) {
-    // final PerlinNoise perlinNoise = PerlinNoise();
-    // return perlinNoise.noise(x, y, t);
-    return js.context.callMethod('eval', <dynamic>['p5.prototype.noise($x)']);
+    final PerlinNoise perlinNoise = PerlinNoise();
+    return perlinNoise.noise(x, y, t);
   }
 
   double map(
